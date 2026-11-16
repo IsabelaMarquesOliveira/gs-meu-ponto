@@ -1,0 +1,19 @@
+GLOBAL SOLUTION 2026.2 - Cross-Platform Application Development
+Projeto: Meu Ponto
+
+INTEGRANTES E RESPONSABILIDADES
+
+Isabela Marques de Oliveira - RM 567230
+- Cadastro na área de desenvolvedores da SPTrans e geração do token
+- Integração com a API Olho Vivo (api.js e config.js)
+- Testes das chamadas à API
+- README e gravação do vídeo de demonstração
+
+Isabelle Ramos de Filippis - RM 566783
+- Uso do GPS e cálculo do ponto mais próximo (localizacao.js)
+- Notificações locais e vibração (notificacoes.js)
+- Lógica de verificação da chegada do ônibus
+
+Samy Tamires de Sousa Cruz - RM 566674
+- Interface da tela principal e estilos (App.js)
+- Tratamento de erros e mensagens de alerta
