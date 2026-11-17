@@ -70,7 +70,7 @@ meu-ponto/
 
 ## 🎥 Vídeo de demonstração
 
-LINK_DO_YOUTUBE
+https://www.youtube.com/watch?v=io3kJ8SgsB0
 
 ## 👩‍💻 Integrantes
 
