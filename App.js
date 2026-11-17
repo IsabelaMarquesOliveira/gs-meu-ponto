@@ -3,7 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
   ActivityIndicator, Alert, Vibration, StyleSheet,
 } from 'react-native';
-import { autenticar, buscarLinhas, buscarParadasDaLinha, buscarPrevisao } from './api';
+import { autenticar, buscarLinhas, buscarParadasDaLinha, buscarPrevisao, buscarPrevisaoDaLinha } from './api';
 import { pedirPermissaoGPS, pegarMinhaPosicao, encontrarPontoMaisProximo } from './localizacao';
 import { pedirPermissaoNotificacao, enviarNotificacao } from './notificacoes';
 
@@ -70,11 +70,18 @@ export default function App() {
         return;
       }
       const minhaPosicao = await pegarMinhaPosicao();
-      const paradas = await buscarParadasDaLinha(linha.cl);
+
+      // Tenta buscar os pontos da linha. Se vier vazio, usa o plano B (previsão da linha)
+      let paradas = await buscarParadasDaLinha(linha.cl);
+      if (!Array.isArray(paradas) || paradas.length === 0) {
+        const previsaoLinha = await buscarPrevisaoDaLinha(linha.cl);
+        paradas = previsaoLinha.ps || [];
+      }
       if (paradas.length === 0) {
-        Alert.alert('Ops', 'Não encontramos pontos para essa linha.');
+        Alert.alert('Ops', 'Não encontramos pontos para essa linha. Talvez não haja ônibus circulando agora.');
         return;
       }
+
       const maisProximo = encontrarPontoMaisProximo(minhaPosicao, paradas);
       setLinhaEscolhida(linha);
       setPonto(maisProximo);
@@ -158,27 +165,11 @@ export default function App() {
     setMonitorando(false);
   }
 
-  // ⚠️ TESTE TEMPORÁRIO: apagar quando a API estiver funcionando
-  async function testarNotificacao() {
-    const permitiu = await pedirPermissaoNotificacao();
-    if (!permitiu) {
-      Alert.alert('Notificações desativadas', 'Ative as notificações nas configurações do celular.');
-      return;
-    }
-    Vibration.vibrate([0, 500, 300, 500]);
-    await enviarNotificacao('🚌 Teste', 'Seu ônibus chega em 3 minutos!');
-  }
-
   return (
     <View style={styles.tela}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <Text style={styles.titulo}>🚏 Meu Ponto</Text>
         <Text style={styles.subtitulo}>Saiba quando seu ônibus chega no ponto mais perto de você</Text>
-
-        {/* ⚠️ TESTE TEMPORÁRIO: apagar quando a API estiver funcionando */}
-        <TouchableOpacity style={[styles.botao, { marginBottom: 12 }]} onPress={testarNotificacao}>
-          <Text style={styles.textoBotao}>🧪 Testar notificação</Text>
-        </TouchableOpacity>
 
         {/* Campo de busca */}
         <View style={styles.linhaBusca}>

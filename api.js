@@ -32,3 +32,8 @@ export function buscarParadasDaLinha(codigoLinha) {
 export function buscarPrevisao(codigoParada, codigoLinha) {
   return get(`/Previsao?codigoParada=${codigoParada}&codigoLinha=${codigoLinha}`);
 }
+
+// 5) Previsão da linha em todos os pontos (usado quando a busca de pontos vem vazia)
+export function buscarPrevisaoDaLinha(codigoLinha) {
+  return get(`/Previsao/Linha?codigoLinha=${codigoLinha}`);
+}
